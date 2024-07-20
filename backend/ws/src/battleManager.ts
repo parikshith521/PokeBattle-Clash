@@ -4,104 +4,107 @@ import { Battle } from "./battle";
 
 
 export class BattleManager {
-    private battles: Battle[];
-    private pendingUser: WebSocket | null;
-    private pendingUserName: string;
-    private pendingUserPokemon: any;
-    private users: WebSocket[];
+	private battles: Battle[];
+	private pendingUser: WebSocket | null;
+	private pendingUserName: string;
+	private pendingUserPokemon: any;
 
-    constructor() {
-        this.battles = [];
-        this.pendingUser = null;
-        this.users = [];
-        this.pendingUserName = "";
-        this.pendingUserPokemon = null;
-    }
+	constructor() {
+		this.battles = [];
+		this.pendingUser = null;
+		this.pendingUserName = "";
+		this.pendingUserPokemon = null;
+	}
 
-    addUser(socket: WebSocket) {
-        this.users.push(socket);
-        this.addHandler(socket);
-    }
+	addUser(socket: WebSocket) {
+		this.addHandler(socket);
+	}
 
-    removeUser(socket: WebSocket) {
-        this.users = this.users.filter((user) => user !== socket)
-    }
+	removeUser(socket: WebSocket) {
+		const battle = this.battles.find((battle)=> battle.player1===socket || battle.player2 === socket);
+		if(battle) {
+            battle.handleDisconnection(socket);
+            this.battles = this.battles.filter((bat)=> bat!==battle);
+        }
+	}
 
-    
-    private addHandler(socket: WebSocket) {
 
-        //setup to deal with messages sent by players
-        socket.on("message", (data) => {
-            const message = JSON.parse(data.toString());
+	private addHandler(socket: WebSocket) {
 
-            if(message.type === INIT_GAME) {
-                if(this.pendingUser){
-                    const player2Name = message.payload.playerName;
-                   const player2Pokemon = message.payload.playerPokemon;
-                  
-                    const battle = new Battle(this.pendingUser, socket, this.pendingUserPokemon, player2Pokemon, this.pendingUserName, player2Name);
-                    this.battles.push(battle);
-                    this.pendingUser = null;
-                }
-                else {
-                    this.pendingUser = socket;
-                    this.pendingUserName = message.payload.playerName;
-                    this.pendingUserPokemon = message.payload.playerPokemon;
-                }
+		//setup to deal with messages sent by players
+		socket.on("message", (data) => {
+			const message = JSON.parse(data.toString());
 
-                return;
-            }
+			if (message.type === INIT_GAME) {
 
-            
+				//check if tihs user is already engaged in battle
+				const btl = this.battles.find((battle) => battle.player1Name === message.payload.playerName || battle.player2Name === message.payload.playerName);
+				if (btl) {
+					socket.send(JSON.stringify({
+						type: 'REPEAT'
+					}))
+					socket.close();
+					return;
+				}
 
-            //we alr know the battle, so p1,p2,poke1, poke2 is known, we just need name of attack, we need the damage amount and who is attacking,
-            //the attacking player is the current socket, so we just find the other socket
-            /*
-                the current hp of the pokemon info is present in the battle class itself so this info is not needed
-                message {
-                    type: deal_damage
-                    payload: {
-                        attack name: string,
-                        damage: number
-                    }
-                }
-            */
-            if(message.type === DEAL_DAMAGE) {
+				//this player could be the pending user themselves
+				if (this.pendingUser) {
+					const player2Name = message.payload.playerName;
+					const player2Pokemon = message.payload.playerPokemon;
 
-                const battle = this.battles.find((battle)=> battle.player1===socket || battle.player2 === socket);
+					// a valid pair
+					if (player2Name != this.pendingUserName) {
+						const battle = new Battle(this.pendingUser, socket, this.pendingUserPokemon, player2Pokemon, this.pendingUserName, player2Name);
+						this.battles.push(battle);
+						this.pendingUser = null;
+					}
+					else {
+						//this user is actually the pending user
+						//replace this user with the pending user and close the pending user connection with REPEAT
+						this.pendingUser.send(JSON.stringify({
+							type: 'REPEAT'
+						}))
+						this.pendingUser.close();
+						this.pendingUser = socket;
+						this.pendingUserName = message.payload.playerName;
+						this.pendingUserPokemon = message.payload.playerPokemon;
+					}
+				}
+				else {
+					this.pendingUser = socket;
+					this.pendingUserName = message.payload.playerName;
+					this.pendingUserPokemon = message.payload.playerPokemon;
+					
+				}
 
-                if(battle) {
-                    battle.handleDamage(socket, message.payload);
-                }
+				return;
+			}
 
-                return;
+			if (message.type === DEAL_DAMAGE) {
 
-            }
+				const battle = this.battles.find((battle) => battle.player1 === socket || battle.player2 === socket);
 
-            /* 
-                just need to send a notification to the player who sent this messgae that he can attack
-                message: {
-                    type: damage done
-                }
-                we can identify the defending player (the player who sent this message) by the socket itself
+				if (battle) {
+					battle.handleDamage(socket, message.payload);
+				}
 
-            */
+				return;
 
-            if( message.type === DAMAGE_DONE ) {
-                
-                const battle = this.battles.find((battle) => battle.player1 === socket || battle.player2 === socket );
+			}
 
-                if(battle) {
-                    battle.handleDamageDone(socket, message.payload);
-                }
+			if (message.type === DAMAGE_DONE) {
 
-                return;
+				const battle = this.battles.find((battle) => battle.player1 === socket || battle.player2 === socket);
 
-            }
+				if (battle) {
+					battle.handleDamageDone(socket, message.payload);
+				}
 
-            
-            
-        })
-    }
+				return;
+
+			}
+
+		})
+	}
 
 }

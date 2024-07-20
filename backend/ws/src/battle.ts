@@ -22,7 +22,13 @@ export class Battle {
         this.player1ScreenUpdated = false;
         this.player2ScreenUpdated = false;
 
-
+        this.player1.send(JSON.stringify({
+            type: INIT_GAME,
+            payload: {
+                opponentPokemon: player2Pokemon,
+                attackerName: player1Name
+            }
+        }))
         
         this.player2.send(JSON.stringify({
             type: INIT_GAME,
@@ -31,12 +37,9 @@ export class Battle {
                 attackerName: player1Name
             }
         }))
-        this.player1.send(JSON.stringify({
-            type: CHOOSE_ATTACK
-        }))
     }
 
-    //make moev
+    //move logic
 
     handleDamage(attackingPlayer: WebSocket, payload: {attack: string, damage: number})
     {
@@ -46,16 +49,6 @@ export class Battle {
         const damage = payload.damage;
         const attackName = payload.attack;
 
-        /* 
-            check if defending pokemon faints, if it does {
-                send a message saying defending pokemon fainted and announce the winning player
-            }
-            if it doesn't faint {
-                update the new hp of the defending pokemon to the frontend, and include the standard message like 
-                attackig pokemon used water gun or smn
-            }
-        */
-        
         if(defendingPokemon.hp - damage <= 0) {
             //defending pokemon faints
             const winningPlayer = (this.player1==attackingPlayer)?this.player1Name:this.player2Name;
@@ -75,6 +68,10 @@ export class Battle {
                     winner: winningPlayer
                 }
             }));
+
+            //close connections 
+            this.player1.close();
+            this.player2.close();
         }
         else {
             const attackingPlayerName = (attackingPlayer==this.player1)?this.player1Name:this.player2Name;
@@ -89,7 +86,7 @@ export class Battle {
                 currhp = this.player1Pokemon.hp;
             }
 
-            //send message to both players notifying the frontend to updat the scene
+            //send message to both players notifying the frontend to update the scene
             this.player1.send(JSON.stringify({
                 type: UPDATE_DAMAGE,
                 payload: {
@@ -130,6 +127,19 @@ export class Battle {
                 }))
             }
         }
+    }
+
+    handleDisconnection(socket: WebSocket) {
+        try {
+            this.player1.send(JSON.stringify({
+                type: 'DISCONNECT'
+            }))
+            this.player2.send(JSON.stringify({
+                type: 'DISCONNECT'
+            }))
+        } catch (e) {
+            console.log(e);
+        };
     }
 
 
