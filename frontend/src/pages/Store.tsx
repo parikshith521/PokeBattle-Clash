@@ -62,26 +62,23 @@ const Store = (prop: any) => {
             
         }
         getData();
-        console.log("BUY POKE RAN");
-        
-       
 
     },[prop])
 
     
 
     return ( 
-        <div>
+        <div className="flex flex-col justify-center items-center">
 
-            <div>
-                <div>PokéBattle</div>
-                {prop.user && <div>
+            <div className="w-full flex justify-around content-around py-10"> 
+                <div className="font-bungee text-orange-500 text-4xl">PokéBattle</div>
+                {prop.user && <div className="flex justify-center items-center">
                         
-                        <p>{prop.user.username}</p>
-                        <button onClick={()=>{
+                        <p className="font-poppins font-medium text-lg text-or mx-3">{prop.user.username}</p>
+                        <button className=" mx-3 hover:text-white hover:bg-purple-600   bg-white text-black font-bungee px-4 py-1.5 font-bold" onClick={()=>{
                                 navigate('/');
                             }}>HOME</button>
-                            <button onClick={()=>{
+                            <button className=" mx-3 hover:text-white hover:bg-purple-600   bg-white text-black font-bungee px-4 py-1.5 font-bold" onClick={()=>{
                                 localStorage.removeItem('user');
                                 prop.setUser(null);
                             }}>LOGOUT</button>
@@ -89,32 +86,31 @@ const Store = (prop: any) => {
             </div>
            
 
-            <div>
-                    <p>Store</p>
+            <div className="my-10 bg-green-500 text-black font-bungee p-3 text-5xl" >
+                <p>Store</p>
             </div>
 
-             <div>
-                Current Money:  $ {userMoney}  
-             </div>
+            <div className="m-5">
+                Current Money: <span className="font-poppins text-green-400"> $ {userMoney} </span> 
+            </div>
 
-            <div>
+            <div className="flex flex-wrap mx-5 justify-center">
             {buyPokemon && buyPokemon.map((poke:any)=>(
-                <div>
-                    <div><img src={`../assets/pokemon/${poke.name}.png`}/></div>
-                    <div>{poke.name}</div>
-                    <div> {poke.hp} HP</div>
-                    <div>$ {poke.cost}</div>
+                <div className="mx-20 my-5 font-poppins flex flex-col justify-center items-center border-[1px] border-solid border-gray-100 p-5">
+                    <div><img className="w-52 m-3 mb-5" src={`../assets/pokemon/${poke.name}.png`}/></div>
+                    <div className="text-2xl">{poke.name}</div>
+                    <div className="text-lg text-green-400 font-medium"> {poke.hp} HP</div>
+                    <div className="text-lg font-medium">$ {poke.cost}</div>
                     <div>
                         {poke.moves.map((move:any)=>(
-                            <div>
-                                <p>{move.name}</p>
-                                <p>{move.damage}</p>
+                            <div className="flex justify-between w-[100%] text-base">
+                                <p className="mx-3 text-left">{move.name}</p>
+                                <p className="mx-3 text-right">{move.damage}</p>
                             </div>
                         ))}
 
                     </div>
-                    <button disabled={poke.cost > userMoney} onClick={async ()=>{
-                        console.log(poke);
+                    <button className="hover:bg-purple-500 hover:cursor-pointer hover:text-white bg-slate-300 text-black py-1 px-2 my-1" disabled={poke.cost > userMoney} onClick={async ()=>{
                         const res = await fetch('http://localhost:8000/api/money/'+prop.user.username,{
                             method: 'PATCH',
                             headers: {

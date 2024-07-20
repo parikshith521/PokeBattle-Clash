@@ -54,16 +54,18 @@ const Login = (prop: any) => {
 
 
     return ( 
-        <div>
-            <form onSubmit={handleSubmit}> 
-                <h3 >Login</h3>
+        <div className="flex items-center justify-center min-h-screen">
+            <form onSubmit={handleSubmit} className=" border border-solid border-gray-300 shadow-lg  p-8 font-poppins"> 
+                <h3 className="text-center  text-2xl font-semibold mb-6 text-white">Login</h3>
 
-                <label>Username: </label>
-                <input type='text' onChange={(e)=>setUsername(e.target.value)} value={username}/>
-                <label >Password: </label>
-                <input  type='password' onChange={(e)=>setPassword(e.target.value)} value={password} />
+                <label className="block text-white mb-2">Username: </label>
+                <input className="w-full p-2 mb-4 border-b-[1px] border-white outline-none focus:border-blue-500 bg-inherit" type='text' onChange={(e)=>setUsername(e.target.value)} value={username}/>
+                <label className="block text-white mb-2">Password: </label>
+                <input className="w-full p-2 mb-6 border-b-[1px] border-white outline-none focus:border-blue-500 bg-inherit" type='password' onChange={(e)=>setPassword(e.target.value)} value={password} />
 
-                <button disabled={isLoading}>Login</button>
+                <button className={`w-full py-2 px-4 text-white font-bold bg-green-500 rounded transition-transform transform ${
+            isLoading ? 'cursor-not-allowed opacity-50' : 'hover:scale-105'
+          }`} disabled={isLoading}>Login</button>
                 {error && <div>{error}</div>}
 
             </form>

@@ -38,41 +38,38 @@ const Home = (prop: any) => {
     return ( 
         <div>
             
-            <div>
+            <div className="w-full flex justify-around content-around py-10">
 
-                <div>PokéBattle</div>
+                <div className="font-bungee text-orange-500 text-4xl">PokéBattle</div>
 
             
-                    {prop.user && <div>
+                    {prop.user && <div className="flex justify-center items-center">
                         
-                    <p>{prop.user.username}</p>
+                    <p className="font-poppins font-medium text-lg text-or mx-3">{prop.user.username}</p>
 
-                    <button onClick={()=>{
+                    <button className=" mx-3 hover:text-white hover:bg-purple-600   bg-white text-black font-bungee px-4 py-1.5 font-bold" onClick={()=>{
                             navigate('/store');
                         }}>STORE</button>
-                        <button onClick={()=>{
+                        <button className=" mx-3 hover:text-white hover:bg-purple-600   bg-white text-black font-bungee px-4 py-1.5 font-bold" onClick={()=>{
                             localStorage.removeItem('user');
                             prop.setUser(null);
                         }}>LOGOUT</button>
                         </div>}
-                    
-            
-
         
                     {!prop.user && <div>
-                        <button onClick={()=>{
+                        <button className=" mx-3 hover:text-white hover:bg-purple-600   bg-white text-black font-bungee px-4 py-1.5 font-bold" onClick={()=>{
                             navigate('/login');
                         }}>LOGIN</button>
 
-                        <button onClick={()=>{
+                        <button className=" mx-3 hover:text-white hover:bg-purple-600   bg-white text-black font-bungee px-4 py-1.5 font-bold" onClick={()=>{
                             navigate('/signup')
                         }}>SIGN UP</button></div> }
 
             </div>
 
-            {prop.user && <div>
+            {prop.user && <div className=" flex flex-col justify-center items-center">
                 
-                <button onClick={()=>{
+                <button className="my-10 hover:cursor-pointer bg-green-500 text-black font-bungee p-3 text-5xl" onClick={()=>{
                     if(pokemon.name.length && pokemon.hp) {
                         const data = {
                             playerName: prop.user.username,
@@ -88,23 +85,23 @@ const Home = (prop: any) => {
                     <p>Enter Arena</p>
                 </button>
                 
-                <div>
+                <div className="flex flex-wrap justify-center my-5">
                     {userPokemon.map((poke: any)=>(
-                        <div>
-                            <div><img src={`../assets/pokemon/${poke.name}.png`}/></div>
-                            <div>{poke.name}</div>
-                            <div>{poke.hp} HP</div>
-                            <div>
+                        <div className="m-2 font-poppins flex flex-col justify-center items-center border-[1px] border-solid border-gray-100 p-5">
+                            <div><img className="w-52 m-3 mb-5" src={`../assets/pokemon/${poke.name}.png`}/></div>
+                            <div className="text-2xl">{poke.name}</div>
+                            <div className="text-lg text-green-400 font-medium">{poke.hp} HP</div>
+                            <div className="p-2 flex flex-col items-center w-[100%]">
                                 {poke.moves.map((move: any)=>(
-                                    <div>
-                                        <p>{move.name } </p>
-                                        <p> {move.damage} </p>
+                                    <div className="flex justify-between w-[100%] text-base">
+                                        <p className=" text-left">{move.name } </p>
+                                        <p className="text-right"> {move.damage} </p>
                                     </div>
 
                                 ))}
 
                             </div>
-                            <button onClick={()=>{
+                            <button className="hover:bg-purple-500 hover:cursor-pointer hover:text-white bg-slate-300 text-black py-1 px-2" onClick={()=>{
                                 setPokemon({
                                     name: poke.name,
                                     hp: poke.hp

@@ -58,61 +58,68 @@ const Signup = (prop: any) => {
 
 
     return ( 
-        <div>
-            <form>
+        <div className=" flex items-center justify-center py-36">
+            <form className=" border border-solid border-gray-300 shadow-lg  p-8 font-poppins">
                 
-                <h3>Sign Up</h3>
+                <h3 className="text-center font-poppins text-2xl font-semibold mb-6 text-white">Sign Up</h3>
 
-                <label>Username: </label>
-                <input type='text' onChange={(e)=>setUsernmae(e.target.value)} value = {username}/>
-                <label>Email: </label>
-                <input type='text' onChange={(e)=>setEmail(e.target.value)} value={email}/>
-                <label>Password: </label>
-                <input type='password' onChange={(e)=>setPassword(e.target.value)} value={password} />
+                <label className="block text-white mb-2">Username: </label>
+                <input className="w-full p-2 mb-4 border-b-[1px] border-white outline-none focus:border-blue-500 bg-inherit" type='text' onChange={(e)=>setUsernmae(e.target.value)} value = {username}/>
+                <label className="block text-white mb-2">Email: </label>
+                <input className="w-full p-2 mb-6 border-b-[1px] border-white outline-none focus:border-blue-500 bg-inherit" type='text' onChange={(e)=>setEmail(e.target.value)} value={email}/>
+                <label className="block text-white mb-2">Password: </label>
+                <input className="w-full p-2 mb-6 border-b-[1px] border-white outline-none focus:border-blue-500 bg-inherit" type='password' onChange={(e)=>setPassword(e.target.value)} value={password} />
 
                 {/* need to find better implementation */}
                 <p>Choose Your Starter Pokemon: </p>
-                <div>
+                <div className="flex flex-wrap justify-center my-5">
                     
-                    <div>
+                    <div className="m-2 font-poppins flex flex-col justify-center items-center border-[1px] border-solid border-gray-100 p-5">
                         <div>
-                            <img src="../assets/pokemon/Pikachu.png"/>
+                            <img className="w-52 m-3 mb-5" src="../assets/pokemon/Pikachu.png"/>
                         </div>
                         <div>Pikachu </div>
                         <div>HP: 130</div>
-                        <button onClick={(e)=>{
+                        <button className="hover:bg-purple-500 hover:cursor-pointer hover:text-white bg-slate-300 text-black py-1 px-2" onClick={(e)=>{
                             e.preventDefault();
                             // setPokeomonId("");
                         }}>Choose</button>
                     </div>
 
-                    <div >
+                    <div className="m-2 font-poppins flex flex-col justify-center items-center border-[1px] border-solid border-gray-100 p-5">
                         <div>
-                            <img src="../assets/pokemon/Pikachu.png"/>
+                            <img className="w-52 m-3 mb-5" src="../assets/pokemon/Pikachu.png"/>
                         </div>
                         <div>Lucario</div>
                         <div> HP: 100</div>
-                        <button onClick={(e)=>{
+                        <button className="hover:bg-purple-500 hover:cursor-pointer hover:text-white bg-slate-300 text-black py-1 px-2" onClick={(e)=>{
                             e.preventDefault();
                             // setPokeomonId("");
                         }}>Choose</button>
                     </div>
 
-                    <div>
+                    <div className="m-2 font-poppins flex flex-col justify-center items-center border-[1px] border-solid border-gray-100 p-5">
                         <div>
-                            <img src="../assets/pokemon/Pikachu.png"/>
+                            <img className="w-52 m-3 mb-5" src="../assets/pokemon/Pikachu.png"/>
                         </div>
                         <div>Charizard </div>
                         <div>HP: 160</div>
-                        <button onClick={(e)=>{
+                        <button  className="hover:bg-purple-500 hover:cursor-pointer hover:text-white bg-slate-300 text-black py-1 px-2" onClick={(e)=>{
                             e.preventDefault();
                             // setPokeomonId("");
                         }}>Choose</button>
                     </div>
                 </div>
 
-                <button disabled={isLoading} onClick={handleSubmit}>Sign Up</button>
+                <button className={`w-full py-2 px-4 text-white font-bold bg-green-500 rounded transition-transform transform ${
+                    isLoading ? 'cursor-not-allowed opacity-50' : 'hover:scale-105'
+                }`} disabled={isLoading} onClick={handleSubmit}>
+                    Sign Up
+                </button>
+
+
                 {error && <div>{error}</div>}
+
             </form>
         </div>
      );
