@@ -1,77 +1,73 @@
-import { BATTLE_ASSET_KEYS, BATTLE_BACKGROUND_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS } from '../assets/asset-keys.ts';
-import Phaser from '../lib/phaser.ts'
-import { SCENE_KEYS } from './scene-keys.ts';
+import {
+  BATTLE_ASSET_KEYS,
+  BATTLE_BACKGROUND_ASSET_KEYS,
+  HEALTH_BAR_ASSET_KEYS,
+} from "../assets/asset-keys.ts";
 
-export class PreloadScene extends Phaser.Scene {
+import { SCENE_KEYS } from "./scene-keys.ts";
+import { Scene } from "phaser";
 
-    public arcanine: any;
-    constructor()
-    {
-        super({
-            key: SCENE_KEYS.PRELOAD_SCENE,
-        });
-        console.log(SCENE_KEYS.PRELOAD_SCENE);
-    }
+export class PreloadScene extends Scene {
+  public arcanine: any;
+  constructor() {
+    super({
+      key: SCENE_KEYS.PRELOAD_SCENE,
+    });
+    console.log(SCENE_KEYS.PRELOAD_SCENE);
+  }
 
-    
+  //preload assets
+  preload() {
+    const backgroundAssetPath = "assets/images/backgrounds";
+    const infoAssetPath = "assets/images/infoBox";
 
-    //preload assets
-    preload() {
-       
-        //need to implement new paths
+    //battle background
+    this.load.image(
+      BATTLE_BACKGROUND_ASSET_KEYS.FOREST,
+      `${backgroundAssetPath}/battle-backgrounds/battle-background1.jpg`
+    );
 
-        //battle background
-        this.load.image(
-            BATTLE_BACKGROUND_ASSET_KEYS.FOREST,
-            `path`
-        );
+    //battle assets
+    this.load.image(
+      BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND,
+      `${infoAssetPath}/ui-space-expansion/custom-ui.png`
+    );
 
-        //battle assets
-        this.load.image(
-            BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND,
-            `path`
-        );
+    //health bar assets
+    this.load.image(
+      HEALTH_BAR_ASSET_KEYS.RIGHT_CAP,
+      `${infoAssetPath}/ui-space-expansion/barHorizontal_green_right.png`
+    );
 
-        //health bar assets
-        this.load.image(
-            HEALTH_BAR_ASSET_KEYS.RIGHT_CAP,
-            `path`
-        );
+    this.load.image(
+      HEALTH_BAR_ASSET_KEYS.MIDDLE,
+      `${infoAssetPath}/ui-space-expansion/barHorizontal_green_mid.png`
+    );
 
-        this.load.image(
-            HEALTH_BAR_ASSET_KEYS.MIDDLE,
-            `path`
-        );
+    this.load.image(
+      HEALTH_BAR_ASSET_KEYS.LEFT_CAP,
+      `${infoAssetPath}/ui-space-expansion/barHorizontal_green_left.png`
+    );
 
-        this.load.image(
-            HEALTH_BAR_ASSET_KEYS.LEFT_CAP,
-            `path`
-        );
+    //sprite anims related stuff
+    const pokemonArray = ["Arcanine", "Gengar", "Pikachu", "Lucario"];
 
+    pokemonArray.forEach((pokemon) => {
+      this.load.atlas(
+        `${pokemon}`,
+        `assets/images/mysprites/${pokemon}SS.png`,
+        `assets/images/mysprites/${pokemon}Sprites.json`
+      );
 
+      this.load.atlas(
+        `${pokemon}Back`,
+        `assets/images/mysprites/${pokemon}BackSS.png`,
+        `assets/images/mysprites/${pokemon}BackSprites.json`
+      );
+    });
+  }
 
-        //sprite anims related stuff
-        const pokemonArray = ['Arcanine', 'Gengar'];
-
-        pokemonArray.forEach((pokemon)=>{
-            this.load.atlas(`path`);
-
-            this.load.atlas(`path`);
-            
-        })
-       
-
-        
-
-
-        
-    }
-    
-    
-    create() {
-        // console.log('create')
-        
-        this.scene.start(SCENE_KEYS.BATTLE_SCENE)
-    }
-
+  create() {
+    this.scene.start(SCENE_KEYS.BATTLE_SCENE);
+  }
 }

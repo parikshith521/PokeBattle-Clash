@@ -1,23 +1,17 @@
-import { BATTLE_ASSET_KEYS, BATTLE_BACKGROUND_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS } from './assets/asset-keys.ts';
+import { BATTLE_ASSET_KEYS, BATTLE_BACKGROUND_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS} from './assets/asset-keys.ts';
 import { SCENE_KEYS } from './scenes/scene-keys';
 import {Scene} from 'phaser';
-import {useState, useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 
 import {Game as GameType} from 'phaser'
 
-const SimBattle = (prop: any) => {
-
-
-        let cnt = 0;
+const SimBattle = (prop: any) => {  
 
         const gameRef = useRef<GameType | null>(null);
-        // useEffect(()=>{
 
-        // },[hp])
 
         class BattleScene extends Scene {
 
-            //'!' to guarantee that value will be assigned before accesss
             public playerHealth!: Phaser.GameObjects.Text;
             public playerHealthBarLeft!: Phaser.GameObjects.Image;
             public playerHealthBar!: Phaser.GameObjects.Image;
@@ -27,8 +21,8 @@ const SimBattle = (prop: any) => {
 
             public playerPokemonSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-            public playerPokemonName: any;
-            public oppPokemonName: any;
+            public playerPokemonName!: Phaser.GameObjects.Text;
+            public oppPokemonName!: Phaser.GameObjects.Text;
 
             public oppHealth!: Phaser.GameObjects.Text;
             public oppHealthBarLeft!: Phaser.GameObjects.Image;
@@ -53,26 +47,16 @@ const SimBattle = (prop: any) => {
                 super({
                     key: SCENE_KEYS.BATTLE_SCENE
                 });
-                this.playerPokemonName = prop.myPokeName;
-                this.oppPokemonName = prop.oppPokeName;
+                // this.playerPokemonName = "";
+                // this.oppPokemonName = "";
                 this.playerPokemonHP = -1;
                 this.oppPokemonHP = -1;
                 
             }
 
-
-             preload() 
-            {
-                 //sprite anims related stuff
-                 console.log("THIS PRELOAD CALLED");
-                // this.load.atlas('arcanine', 'assets/ArcanineSS.png','assets/ArcanineSprites.json');
-            }
-
             create() {
-                // console.log('create')
+         
                 //create main background
-
-
                 this.updatePlayerAnim = (myPokeName: string) => {
                     console.log("PLAYER ANIM UPDATE CALLED");
                     // console.log(this.playerPokemonSprite);
@@ -89,15 +73,9 @@ const SimBattle = (prop: any) => {
                         
 
                     }
-                    else {
-                        console.log("PLAYER ANIM UPDATE ELSE RAN");
-                       
-                    }
-                    
                 }
 
                 this.updateOppAnim = (oppPokeName: string) => {
-                   
                     console.log("OPP ANIM UPDATE CALLED");
                     if(oppPokeName) {
                         console.log("OPP ANIM UPDATE IF RAN");
@@ -173,64 +151,34 @@ const SimBattle = (prop: any) => {
 
                     //background
                 this.add.image(0,0,BATTLE_BACKGROUND_ASSET_KEYS.FOREST).setOrigin(0);
-        
-                //render out pokemons
-                // this.oppPokemon = this.add.image(768,144, MONSTER_ASSET_KEYS.CARNODUSK,0);
-                // this.oppPokemon.visible = false;
-                // this.playerPokemon = this.add.image(256,316,MONSTER_ASSET_KEYS.IGUANIGNITE,0).setFlipX(true);
-                // this.playerPokemon.visible = false;
 
-                //render out spirtes
-                const myPokeName = prop.myPokeName;
-                const oppPokeName = prop.oppPokeName;
-
-                //arcanine => 51, arcanineback => 51
-                //gengar => 39, gengarback => 43
-
-                const ptrs = {
-                    "Arcanine": 51,
-                    "ArcanineBack": 51,
-                    "Gengar": 39,
-                    "GengarBack": 43
-                }
-
-                console.log("INFOS HERE!!!!!!!!!!!!!!!!!!!: ");
-                console.log(myPokeName); console.log(oppPokeName);
 
                 //arcanine
 
                 this.anims.create({key: `Arcanine`, frames: this.anims.generateFrameNames(`Arcanine`,{prefix: 'sprite', end:51, zeroPad: 2}),repeat: -1});
-
                 this.anims.create({key: `ArcanineBack`, frames: this.anims.generateFrameNames(`ArcanineBack`,{prefix: 'sprite', end:51, zeroPad: 2}),repeat: -1});
 
                 //gengar
 
                 this.anims.create({key: `Gengar`, frames: this.anims.generateFrameNames(`Gengar`,{prefix: 'sprite', end:39, zeroPad: 2}),repeat: -1});
-
                 this.anims.create({key: `GengarBack`, frames: this.anims.generateFrameNames(`GengarBack`,{prefix: 'sprite', end:43, zeroPad: 2}),repeat: -1});
 
                 
+                //lucario
+                this.anims.create({key: 'Lucario', frames: this.anims.generateFrameNames('Lucario',{prefix: 'sprite', end: 46, zeroPad: 2}), repeat: -1});
+                this.anims.create({key: 'LucarioBack', frames: this.anims.generateFrameNames('LucarioBack',{prefix: 'sprite', end: 63, zeroPad: 2}), repeat: -1});
 
-                // this.playerPokemonSprite = this.physics.add.sprite(256,416, 'ArcanineBack')
-                // this.playerPokemonSprite.setScale(1.5)
-                // this.playerPokemonSprite.visible = false;
-
-               
-
-                // this.oppPokemonSprite = this.physics.add.sprite(768,244,'Arcanine');
-                // this.oppPokemonSprite.setScale(1.5)
-                // this.oppPokemonSprite.visible = false;
-            
-                //render player health bar
+                //pikachu
+                this.anims.create({key: 'Pikachu', frames: this.anims.generateFrameNames('Pikachu',{prefix: 'sprite', end: 33, zeroPad: 2}), repeat: -1});
+                this.anims.create({key: 'PikachuBack', frames: this.anims.generateFrameNames('PikachuBack',{prefix: 'sprite', end: 35, zeroPad: 2}), repeat: -1});
 
 
-
-                this.playerPokemonName = this.add.text(30,20,'Pokemon',{
+                this.playerPokemonName = this.add.text(30,20,"",{
                     color: '#7E3D3F',
                     fontSize: '32px'
                 });
 
-                this.playerHealth = this.add.text(443,80,`${prop.hp}/HP`,{
+                this.playerHealth = this.add.text(443,80,'25/25',{
                     color: '#7E3D3F',
                     fontSize: '16px'
                 }).setOrigin(1,0)
@@ -239,10 +187,6 @@ const SimBattle = (prop: any) => {
                     this.add.image(0,0,BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND).setOrigin(0),
                     this.playerPokemonName,
                     this.#createHealthPlayer(34,34),
-                    // this.add.text(this.playerPokemonName.width + 35,23,'L5',{
-                    //     color: '#ED474B',
-                    //     fontSize: '28px'
-                    // }),
                     this.add.text(30,55,'HP',{
                         color: '#FF6505',
                         fontSize: '24px',
@@ -254,7 +198,7 @@ const SimBattle = (prop: any) => {
                 this.playerInfoBox.visible = false;
 
                 //render opp health bar
-               this.oppPokemonName = this.add.text(30,20,'Pokemon',{
+               this.oppPokemonName = this.add.text(30,20,"",{
                     color: '#7E3D3F',
                     fontSize: '32px'
                 });
@@ -269,10 +213,6 @@ const SimBattle = (prop: any) => {
                     this.add.image(0,0,BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND).setOrigin(0),
                 this.oppPokemonName,
                     this.#createHealthOpp(34,34),
-                    // this.add.text(this.oppPokemonName.width + 35,23,'L5',{
-                    //     color: '#ED474B',
-                    //     fontSize: '28px'
-                    // }),
                     this.add.text(30,55,'HP',{
                         color: '#FF6505',
                         fontSize: '24px',
@@ -282,13 +222,6 @@ const SimBattle = (prop: any) => {
 
                 ]);
                 this.oppInfoBox.visible = false;
-
-                //srpite related stuff
-                // this.anims.create({key: 'sprite', frames: this.anims.generateFrameNames('arcanine',{prefix: 'sprite', end:51, zeroPad: 2}),repeat: -1});
-
-                // this.arcanine = this.physics.add.sprite(100,200, 'arcanine');
-
-
 
             }
 
@@ -313,20 +246,10 @@ const SimBattle = (prop: any) => {
                 console.log("LEFT CAP WIDTH: ", this.oppHealthBarLeft.width)
                 return this.add.container(x,y,[this.oppHealthBarLeft,this.oppHealthBar,this.oppHealthBarRight])
 
-
             }
-
-            update() {
-                console.log('battle scene udpate')
-                
-            
-            }
-
 
         }
 
-
-    // const [game,setGame] = useState<GameType>();
 
     useEffect(()=>{
 
@@ -357,7 +280,6 @@ const SimBattle = (prop: any) => {
             });
 
             gameRef.current = phaserGame;
-            //setGame(phaserGame);
 
             phaserGame.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene);
             phaserGame.scene.add(SCENE_KEYS.BATTLE_SCENE, BattleScene);
@@ -422,9 +344,6 @@ const SimBattle = (prop: any) => {
         {                   }
         </div>
 
-        <div>
-
-        </div>
         </>
      );
 }
